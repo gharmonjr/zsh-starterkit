@@ -11,7 +11,7 @@ pulls in all the best stuff to get you started with minimal setup.
 
 Better living via better zsh defaults - that's zsh-starterkit.
 
-## #Plugins
+## Plugins
 
 zsh-starterkit gives you some of the best plugins to get going.
 
