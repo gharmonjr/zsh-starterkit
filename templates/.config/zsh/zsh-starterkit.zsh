@@ -6,7 +6,7 @@ zmodload zsh/datetime
 # set reasonable defaults
 USE_OMZ="${USE_OMZ:-true}"
 OMZ_THEME="${OMZ_THEME:-refined}"
-UPDATE_ZSH_DAYS="${UPDATE_ZSH_DAYS:14}"
+UPDATE_ZSH_DAYS="${UPDATE_ZSH_DAYS:-14}"
 
 
 # --- antigen ------------------------------------------------------------------
@@ -44,7 +44,7 @@ antigen apply
 alias cd..='cd ..'
 alias reload='source "${ZDOTDIR}"/.zshrc'
 alias zshrc='${=EDITOR} "${ZDOTDIR}"/.zshrc'
-alias ls='la -GF'
+alias ls='ls -GF'
 
 # `ls` after `cd`
 # https://stackoverflow.com/questions/3964068/zsh-automatically-run-ls-after-every-cd
@@ -68,6 +68,7 @@ function omz-plugins() {
 # update all the plugins that antigen manages
 function zsh-update() {
   antigen update
+  curl -L "https://raw.githubusercontent.com/mattmc3/zsh-starterkit/master/templates/.config/zsh/zsh-starterkit.zsh" >! "${ZDOTDIR}"/zsh-starterkit.zsh
   echo "Plugins updated... Reload your shell to see changes."
 }
 
@@ -76,7 +77,7 @@ if [ "$DISABLE_AUTO_UPDATE" != "true" ]; then
   LAST_EPOCH=0
   [ -f "{ZDOTDIR}"/.zsh-starterkit-update ] && source "{ZDOTDIR}"/.zsh-starterkit-update
   DAYS_SINCE_UPDATE="$(( ($EPOCHSECONDS - $LAST_EPOCH) / 60 / 60 / 24 ))"
-  if [ $DAYS_SINCE_UPDATE -ge $UPDATE_ZSH_DAYS ];
+  if [ $DAYS_SINCE_UPDATE -ge $UPDATE_ZSH_DAYS ]; then
     antigen update
     echo "LAST_EPOCH=$EPOCHSECONDS" >! ${ZDOTDIR}/.zsh-starterkit-update
   fi
