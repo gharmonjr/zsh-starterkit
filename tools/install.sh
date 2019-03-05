@@ -13,6 +13,7 @@ done
 # setup variables
 export ZDOTDIR="${ZDOTDIR:-$XDG_CONFIG_HOME/zsh}"
 export ADOTDIR="${ADOTDIR:-$XDG_DATA_HOME/antigen}"
+export ZSH_STARTERKIT="${ZSH_STARTERKIT:-$ZDOTDIR/.zsh-starterkit}"
 
 main() {
   # Use colors, but only if connected to a terminal, and that terminal
@@ -46,7 +47,6 @@ main() {
   fi
 
   # check if zsh-starterkit is already installed
-  ZSH_STARTERKIT="${ZSH_STARTERKIT:-$ZDOTDIR/.zsh-starterkit}"
   if [ -d "$ZSH_STARTERKIT" ]; then
     printf "${YELLOW}You already have zsh-starterkit installed.${NORMAL}\n"
     printf "You'll need to remove $ZSH_STARTERKIT if you want to re-install.\n"

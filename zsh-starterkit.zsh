@@ -27,7 +27,7 @@ if [[ ! -f "$ADOTDIR"/antigen.zsh ]]; then
 fi
 
 # tell antigen to monitor the following files for changes
-typeset -a ANTIGEN_CHECK_FILES=("$ZDOTDIR/.zshrc" "$ZDOTDIR/zsh-starterkit.zsh" "$ADOTDIR/antigen.zsh")
+typeset -a ANTIGEN_CHECK_FILES=("$ZDOTDIR/.zshrc" "$ZSH_STARTERKIT/zsh-starterkit.zsh" "$ADOTDIR/antigen.zsh")
 
 # load antigen
 source "$ADOTDIR"/antigen.zsh
