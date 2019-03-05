@@ -2,24 +2,59 @@
 
 zmodload zsh/datetime
 
-_set_last_updated() {
-  echo "LAST_EPOCH=$EPOCHSECONDS" >! ${ZSH_STARTERKIT}/.zsh-starterkit-update
+function _current_epoch() {
+  echo $(( $EPOCHSECONDS / 60 / 60 / 24 ))
 }
 
-main() {
-  UPDATE_ZSH_DAYS="${UPDATE_ZSH_DAYS:-14}"
+function _update_zsh_update() {
+  echo "LAST_EPOCH=$(_current_epoch)" >! ${ZSH_STARTERKIT}/.zsh-update
+}
 
-  # Cancel upgrade if the current user doesn't have write permissions for the
-  # zsh-starterkit directory.
-  [[ -w "$ZSH_STARTERKIT" ]] || return 0
+function _upgrade_zsh() {
+  env ZSH_STARTERKIT=$ZSH_STARTERKIT sh $ZSH_STARTERKIT/tools/upgrade.sh
+  # update the zsh file
+  _update_zsh_update
+}
 
-  [ ! -f "${ZSH_STARTERKIT}"/.zsh-starterkit-update ] && _set_last_updated
-  source "${ZSH_STARTERKIT}"/.zsh-starterkit-update
+epoch_target=$UPDATE_ZSH_DAYS
+if [[ -z "$epoch_target" ]]; then
+  # Default to old behavior
+  epoch_target=13
+fi
 
-  DAYS_SINCE_UPDATE="$(( ($EPOCHSECONDS - $LAST_EPOCH) / 60 / 60 / 24 ))"
-  if [ $DAYS_SINCE_UPDATE -ge $UPDATE_ZSH_DAYS ]; then
-    env sh "${ZSH_STARTERKIT}"/tools/update.sh
-    _set_last_updated
+# Cancel upgrade if the current user doesn't have write permissions for the
+# oh-my-zsh directory.
+[[ -w "$ZSH_STARTERKIT" ]] || return 0
+
+# Cancel upgrade if git is unavailable on the system
+whence git >/dev/null || return 0
+
+if mkdir "$ZSH_STARTERKIT/update.lock" 2>/dev/null; then
+  if [ -f ${ZSH_STARTERKIT}/.zsh-update ]; then
+    . ${ZSH_STARTERKIT}/.zsh-update
+
+    if [[ -z "$LAST_EPOCH" ]]; then
+      _update_zsh_update && return 0
+    fi
+
+    epoch_diff=$(($(_current_epoch) - $LAST_EPOCH))
+    if [ $epoch_diff -gt $epoch_target ]; then
+      if [ "$DISABLE_UPDATE_PROMPT" = "true" ]; then
+        _upgrade_zsh
+      else
+        echo "[Oh My Zsh] Would you like to update? [Y/n]: \c"
+        read line
+        if [[ "$line" == Y* ]] || [[ "$line" == y* ]] || [ -z "$line" ]; then
+          _upgrade_zsh
+        else
+          _update_zsh_update
+        fi
+      fi
+    fi
+  else
+    # create the zsh file
+    _update_zsh_update
   fi
-}
-main
+
+  rmdir $ZSH_STARTERKIT/update.lock
+fi

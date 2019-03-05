@@ -76,7 +76,7 @@ function omz-plugins() {
 
 # update all the plugins that antigen manages
 function zsh-update() {
-  env zsh -f "$ZSH_STARTERKIT"/tools/update.sh
+  env zsh -f "$ZSH_STARTERKIT"/tools/upgrade.sh
 }
 
 # Check for updates on initial load...
