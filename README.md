@@ -10,20 +10,10 @@ Better shell living via better zsh defaults - that's zsh-starterkit.
 
 ## Basic Installation
 
-zsh-starterkit can be installed by running one of the following commands in your
-terminal. You can install this via the command line with either `curl` or
-`wget`.
-
-### via curl
+zsh-starterkit can be installed by running this `curl` command.
 
 ```shell
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/mattmc3/zsh-starterkit/master/tools/install.sh)"
-```
-
-### via wget
-
-```shell
-sh -c "$(wget https://raw.githubusercontent.com/mattmc3/zsh-starterkit/master/tools/install.sh -O -)"
+sh -c "$(curl -fsSL git.io/zsh-starterkit)"
 ```
 
 ## Details
