@@ -4,4 +4,4 @@ export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
 export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
 
 export ZDOTDIR="${XDG_CONFIG_HOME}/zsh"
-[ -f "${ZDOTDIR}/zshenv.zsh" ] && source "${ZDOTDIR}/zshenv.zsh"
+[ -f "${ZDOTDIR}/.zshenv" ] && source "${ZDOTDIR}/.zshenv"

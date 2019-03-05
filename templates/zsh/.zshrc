@@ -15,18 +15,14 @@ OMZ_THEME="avit"
 # DISABLE_AUTO_UPDATE="true"
 
 # Uncomment the following line to change how often to auto-update (in days).
-# export UPDATE_ZSH_DAYS=13
+# export UPDATE_ZSH_DAYS=14
 
 # Uncomment the following line to enable listing directory contents after
-# changing to a new directory
+# changing to a new directory. This feature is AWESOME, and worth trying!
 # export LS_AFTER_CD="true"
 
 # Which plugins would you like to load?
 ZSH_PLUGINS=(
-  # better shell living via better zsh config!
-  mattmc3/zsh-starterkit
-  mattmc3/zsh-history
-
   # oh-my-zsh
   colored-man-pages
   common-aliases
@@ -44,6 +40,7 @@ ZSH_PLUGINS=(
 
   # misc
   mafredri/zsh-async
+  mattmc3/zsh-history
 )
 
 # load the starter kit

@@ -1,22 +1,24 @@
-# this file contains the minimal scripting that needs to be sourced by .zshrc
-# in order to use zsh-starterkit to load plugins and themes. The "magic" is
-# really just leveraging the plugin manager antigen, but we hide that detail
-# from .zshrc in the event that we want to swap to another package manager
-# in the future.
+# meant to be sourced from .zshrc
+# "pay no attention to the antigen behind the curtain"
+
+zmodload zsh/datetime
 
 # set reasonable defaults
 USE_OMZ="${USE_OMZ:-true}"
 OMZ_THEME="${OMZ_THEME:-refined}"
+UPDATE_ZSH_DAYS="${UPDATE_ZSH_DAYS:14}"
 
+
+# --- antigen ------------------------------------------------------------------
 # install antigen if needed
-ADOTDIR="${XDG_CONFIG_HOME:-$HOME/.config}/antigen"
+ADOTDIR="${ADOTDIR:-$XDG_DATA_HOME/antigen}"
 if [[ ! -f "$ADOTDIR"/antigen.zsh ]]; then
   mkdir -p "$ADOTDIR"
   curl -L git.io/antigen > "$ADOTDIR"/antigen.zsh
 fi
 
-# tell antigen about the other files we use
-# typeset -a ANTIGEN_CHECK_FILES=("$ZDOTDIR/.zshrc" "$ZDOTDIR/zshrc.zsh" "$ADOTDIR/antigen.zsh")
+# tell antigen to monitor the following files for changes
+typeset -a ANTIGEN_CHECK_FILES=("$ZDOTDIR/.zshrc" "$ZDOTDIR/zsh-starterkit.zsh" "$ADOTDIR/antigen.zsh")
 
 # load antigen
 source "$ADOTDIR"/antigen.zsh
@@ -32,19 +34,15 @@ for plugin ($ZSH_PLUGINS); do
   antigen bundle $plugin
 done
 
-# done
+# make it so
 antigen apply
 
 
-# Check for updates on initial load...
-if [ "$DISABLE_AUTO_UPDATE" != "true" ]; then
-  zsh -f ${ZDOTDIR}/zsh-starterkit/tools/check_for_update.sh
-fi
-
+# --- misc ---------------------------------------------------------------------
 # helpful aliases
 # also, undo/fix some things omz does
 alias cd..='cd ..'
-alias zsh-reload='source "${ZDOTDIR}"/.zshrc'
+alias reload='source "${ZDOTDIR}"/.zshrc'
 alias zshrc='${=EDITOR} "${ZDOTDIR}"/.zshrc'
 alias ls='la -GF'
 
@@ -70,5 +68,16 @@ function omz-plugins() {
 # update all the plugins that antigen manages
 function zsh-update() {
   antigen update
-  source "${ZDOTDIR}"/.zshrc
+  echo "Plugins updated... Reload your shell to see changes."
 }
+
+# Check for updates on initial load...
+if [ "$DISABLE_AUTO_UPDATE" != "true" ]; then
+  LAST_EPOCH=0
+  [ -f "{ZDOTDIR}"/.zsh-starterkit-update ] && source "{ZDOTDIR}"/.zsh-starterkit-update
+  DAYS_SINCE_UPDATE="$(( ($EPOCHSECONDS - $LAST_EPOCH) / 60 / 60 / 24 ))"
+  if [ $DAYS_SINCE_UPDATE -ge $UPDATE_ZSH_DAYS ];
+    antigen update
+    echo "LAST_EPOCH=$EPOCHSECONDS" >! ${ZDOTDIR}/.zsh-starterkit-update
+  fi
+fi

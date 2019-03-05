@@ -1,3 +1,20 @@
+#!/usr/bin/env sh
+
+# handle setting base XDG directories first because .zshenv will assume they
+# are there already
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+
+declare -a xdgdirs=("$XDG_CONFIG_HOME" "$XDG_CACHE_HOME" "$XDG_DATA_HOME")
+for xdgdir in "${xdgdirs[@]}"; do
+  [ -d "$xdgdir" ] || mkdir -p "$xdgdir"
+done
+
+# setup variables
+export ZDOTDIR="${ZDOTDIR:-$XDG_CONFIG_HOME/zsh}"
+export ADOTDIR="${ADOTDIR:-$XDG_DATA_HOME/antigen}"
+
 main() {
   # Use colors, but only if connected to a terminal, and that terminal
   # supports them.
@@ -20,19 +37,6 @@ main() {
     NORMAL=""
   fi
 
-  # handle setting base XDG directories because .zshenv will assume they are
-  # there already
-  XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
-  XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
-  XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
-
-  for xdgdir ("$XDG_CONFIG_HOME" "$XDG_CACHE_HOME" "$XDG_DATA_HOME"); do
-    [ -d "$xdgdir" ] || mkdir -p "$xdgdir"
-  done
-
-  # setup variables
-  ZDOTDIR="${ZDOTDIR:-$XDG_CONFIG_HOME/zsh}"
-  ZSH_STARTERKIT="${ZDOTDIR}/zsh-starterkit"
   BACKUPEXT="pre-zsh-starterkit-$(date +%Y%m%d-%H%M%S)"
 
   # Only enable exit-on-error after the non-critical colorization stuff,
@@ -44,59 +48,39 @@ main() {
     exit
   fi
 
-  if [ ! -n "$ZSH_STARTERKIT" ]; then
-    ZSH_STARTERKIT="${ZDOTDIR}/zsh-starterkit"
-  fi
-
-  if [ -d "$ZSH_STARTERKIT" ]; then
-    printf "${YELLOW}You already have zsh-starterkit installed.${NORMAL}\n"
-    printf "You'll need to remove $ZSH_STARTERKIT if you want to re-install.\n"
-    exit
-  fi
-
-  # Prevent the cloned repository from having insecure permissions. Failing to do
-  # so causes compinit() calls to fail with "command not found: compdef" errors
-  # for users with insecure umasks (e.g., "002", allowing group writability). Note
-  # that this will be ignored under Cygwin by default, as Windows ACLs take
-  # precedence over umasks except for filesystems mounted with option "noacl".
-  umask g-w,o-w
-
-  printf "${BLUE}Cloning zsh-starterkit...${NORMAL}\n"
-  command -v git >/dev/null 2>&1 || {
-    echo "Error: git is not installed"
-    exit 1
-  }
-  # The Windows (MSYS) Git is not compatible with normal use on cygwin
-  if [ "$OSTYPE" = cygwin ]; then
-    if git --version | grep msysgit > /dev/null; then
-      echo "Error: Windows/MSYS Git is not supported on Cygwin"
-      echo "Error: Make sure the Cygwin git package is installed and is first on the path"
-      exit 1
-    fi
-  fi
-  env git clone --depth=1 https://github.com/mattmc3/zsh-starterkit.git "$ZSH_STARTERKIT" || {
-    printf "Error: git clone of zsh-starterkit repo failed\n"
-    exit 1
-  }
-
   # backup existing setup
   printf "${BLUE}Looking for existing zsh configs...${NORMAL}\n"
-  for f (~/.zshrc ~/.zshenv); do
+  declare -a zshfiles=(~/.zshrc ~/.zshenv)
+  for f in "${zshfiles[@]}"; do
     if [ -f "$f" ] || [ -h "$f" ]; then
       printf "${YELLOW}Found $f.${NORMAL} ${GREEN}Backing up to $f.${BACKUPEXT}${NORMAL}\n";
       mv "$f" "${f}.${BACKUPEXT}"
     fi
   done
-  for d ("${ZDOTDIR}"); do
+  declare -a zshdirs=(~/.config/zsh)
+  for d in "${zshdirs[@]}"; do
     if [ -d "$d" ] || [ -h "$d" ]; then
       printf "${YELLOW}Found $d.${NORMAL} ${GREEN}Backing up to $d.${BACKUPEXT}${NORMAL}\n";
       mv "$d" "${d}.${BACKUPEXT}"
     fi
   done
 
-  printf "${BLUE}Using the zsh-starterkit template configs and creating ${ZDOTDIR}${NORMAL}\n"
-  cp "$ZSH_STARTERKIT"/templates/.zshenv ~/.zshenv
-  cp -r "$ZSH_STARTERKIT"/templates/zsh "${ZDOTDIR}"
+  # pull in template files
+  printf "${BLUE}Setting up optimal zsh structure in ${ZDOTDIR}${NORMAL}\n"
+  declare -a templatefiles=(
+    .zshenv
+    .config/zsh/.zshrc
+    .config/zsh/zsh-starterkit.zsh
+  )
+  mkdir -p "${ZDOTDIR}"
+  for tfile in "${templatefiles[@]}"; do
+    curl -L "https://raw.githubusercontent.com/mattmc3/zsh-starterkit/master/templates/${tfile}" > $HOME/$tfile
+  done
+
+  # make some handy extras
+  touch "${ZDOTDIR}/.zshenv"
+  zsh -c "cd ${ZDOTDIR}; ln -s .zshrc zshrc.zsh"
+  zsh -c "cd ${ZDOTDIR}; ln -s .zshenv zshenv.zsh"
 
 # If this user's login shell is not already "zsh", attempt to switch.
   TEST_CURRENT_SHELL=$(basename "$SHELL")
