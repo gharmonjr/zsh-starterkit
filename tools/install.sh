@@ -56,16 +56,10 @@ main() {
   # backup existing setup
   BACKUPEXT="pre-zsh-starterkit-$(date +%Y%m%d-%H%M%S)"
   printf "${BLUE}Looking for existing zsh configs...${NORMAL}\n"
-  for f in ~/.zshrc ~/.zshenv; do
+  for f in ~/.zshrc ~/.zshenv "${ZDOTDIR}/.zshrc"; do
     if [ -f "$f" ] || [ -h "$f" ]; then
       printf "${YELLOW}Found $f.${NORMAL} ${GREEN}Backing up to $f.${BACKUPEXT}${NORMAL}\n";
       mv "$f" "${f}.${BACKUPEXT}"
-    fi
-  done
-  for d in ~/.config/zsh "${ZDOTDIR}"; do
-    if [ -d "$d" ] || [ -h "$d" ]; then
-      printf "${YELLOW}Found $d.${NORMAL} ${GREEN}Backing up to $d.${BACKUPEXT}${NORMAL}\n";
-      mv "$d" "${d}.${BACKUPEXT}"
     fi
   done
   mkdir -p "$ZDOTDIR"
@@ -101,7 +95,14 @@ main() {
   cp "$ZSH_STARTERKIT"/templates/.zshenv ~/.zshenv
   cp "$ZSH_STARTERKIT"/templates/.config/zsh/.zshrc "${ZDOTDIR}"/.zshrc
   touch "${ZDOTDIR}/.zshenv"
-  zsh -c "cd ${ZDOTDIR}; ln -s .zshrc zshrc.zsh; ln -s .zshenv zshenv.zsh"
+  [ ! -f "${ZDOTDIR}"/zshrc.zsh ] && ln -s "${ZDOTDIR}"/.zshrc "${ZDOTDIR}"/zshrc.zsh
+  if [ -f ~/.zsh_history ]; then
+    if [ ! -f "${ZDOTDIR}"/zsh_history ]; then
+      mv ~/.zsh_history "${ZDOTDIR}"/zsh_history
+    else
+      mv ~/.zsh_history "${ZDOTDIR}/zsh_history.${BACKUPEXT}"
+    fi
+  fi
 
   # If this user's login shell is not already "zsh", attempt to switch.
   TEST_CURRENT_SHELL=$(basename "$SHELL")

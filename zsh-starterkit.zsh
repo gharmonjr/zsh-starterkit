@@ -8,6 +8,10 @@ export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
 export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
 
+# these should already be set
+export ZDOTDIR="${ZDOTDIR:-$HOME/.config/zsh}"
+export ZSH_STARTERKIT="${ZSH_STARTERKIT:-$ZDOTDIR/.zsh-starterkit}"
+
 # set reasonable defaults
 USE_OMZ="${USE_OMZ:-true}"
 OMZ_THEME="${OMZ_THEME:-refined}"
@@ -72,18 +76,10 @@ function omz-plugins() {
 
 # update all the plugins that antigen manages
 function zsh-update() {
-  antigen update
-  curl -L "https://raw.githubusercontent.com/mattmc3/zsh-starterkit/master/templates/.config/zsh/zsh-starterkit.zsh" >! "${ZDOTDIR}"/zsh-starterkit.zsh
-  echo "Plugins updated... Reload your shell to see changes."
+  env zsh -f "$ZSH_STARTERKIT"/tools/update.sh
 }
 
 # Check for updates on initial load...
 if [ "$DISABLE_AUTO_UPDATE" != "true" ]; then
-  LAST_EPOCH=0
-  [ -f "{ZDOTDIR}"/.zsh-starterkit-update ] && source "{ZDOTDIR}"/.zsh-starterkit-update
-  DAYS_SINCE_UPDATE="$(( ($EPOCHSECONDS - $LAST_EPOCH) / 60 / 60 / 24 ))"
-  if [ $DAYS_SINCE_UPDATE -ge $UPDATE_ZSH_DAYS ]; then
-    antigen update
-    echo "LAST_EPOCH=$EPOCHSECONDS" >! ${ZDOTDIR}/.zsh-starterkit-update
-  fi
+  env zsh -f "$ZSH_STARTERKIT"/tools/check_for_update.sh
 fi
