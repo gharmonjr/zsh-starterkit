@@ -1,5 +1,7 @@
 # Config created by zsh-starterkit
 
+export ZSH_STARTERKIT="${ZDOTDIR}/.zsh-starterkit"
+
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
@@ -44,7 +46,7 @@ ZSH_PLUGINS=(
 )
 
 # load the starter kit
-source ${ZDOTDIR}/zsh-starterkit.zsh
+source ${ZSH_STARTERKIT}/zsh-starterkit.zsh
 
 # --- User configuration below -------------------------------------------------
 
