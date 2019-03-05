@@ -1,2 +1,1 @@
-0=${(%):-%N}
-source ${0:A:h}/zsh-starterkit.zsh
+zsh-starterkit.zsh
