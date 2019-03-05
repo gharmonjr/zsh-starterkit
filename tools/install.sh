@@ -6,8 +6,7 @@ export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
 export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
 
-declare -a xdgdirs=("$XDG_CONFIG_HOME" "$XDG_CACHE_HOME" "$XDG_DATA_HOME")
-for xdgdir in "${xdgdirs[@]}"; do
+for xdgdir in "$XDG_CONFIG_HOME" "$XDG_CACHE_HOME" "$XDG_DATA_HOME"; do
   [ -d "$xdgdir" ] || mkdir -p "$xdgdir"
 done
 
@@ -37,8 +36,6 @@ main() {
     NORMAL=""
   fi
 
-  BACKUPEXT="pre-zsh-starterkit-$(date +%Y%m%d-%H%M%S)"
-
   # Only enable exit-on-error after the non-critical colorization stuff,
   # which may fail on systems lacking tput or terminfo
   set -e
@@ -48,41 +45,65 @@ main() {
     exit
   fi
 
+  # check if zsh-starterkit is already installed
+  ZSH_STARTERKIT="${ZSH_STARTERKIT:-$ZDOTDIR/.zsh-starterkit}"
+  if [ -d "$ZSH_STARTERKIT" ]; then
+    printf "${YELLOW}You already have zsh-starterkit installed.${NORMAL}\n"
+    printf "You'll need to remove $ZSH_STARTERKIT if you want to re-install.\n"
+    exit
+  fi
+
   # backup existing setup
+  BACKUPEXT="pre-zsh-starterkit-$(date +%Y%m%d-%H%M%S)"
   printf "${BLUE}Looking for existing zsh configs...${NORMAL}\n"
-  declare -a zshfiles=(~/.zshrc ~/.zshenv)
-  for f in "${zshfiles[@]}"; do
+  for f in ~/.zshrc ~/.zshenv; do
     if [ -f "$f" ] || [ -h "$f" ]; then
       printf "${YELLOW}Found $f.${NORMAL} ${GREEN}Backing up to $f.${BACKUPEXT}${NORMAL}\n";
       mv "$f" "${f}.${BACKUPEXT}"
     fi
   done
-  declare -a zshdirs=(~/.config/zsh)
-  for d in "${zshdirs[@]}"; do
+  for d in ~/.config/zsh "${ZDOTDIR}"; do
     if [ -d "$d" ] || [ -h "$d" ]; then
       printf "${YELLOW}Found $d.${NORMAL} ${GREEN}Backing up to $d.${BACKUPEXT}${NORMAL}\n";
       mv "$d" "${d}.${BACKUPEXT}"
     fi
   done
+  mkdir -p "$ZDOTDIR"
 
-  # pull in template files
-  printf "${BLUE}Setting up optimal zsh structure in ${ZDOTDIR}${NORMAL}\n"
-  declare -a templatefiles=(
-    .zshenv
-    .config/zsh/.zshrc
-    .config/zsh/zsh-starterkit.zsh
-  )
-  mkdir -p "${ZDOTDIR}"
-  for tfile in "${templatefiles[@]}"; do
-    curl -L "https://raw.githubusercontent.com/mattmc3/zsh-starterkit/master/templates/${tfile}" > $HOME/$tfile
-  done
+  # Prevent the cloned repository from having insecure permissions. Failing to
+  # do so causes compinit() calls to fail with "command not found: compdef"
+  # errors for users with insecure umasks (e.g., "002", allowing group
+  # writability). Note that this will be ignored under Cygwin by default, as
+  # Windows ACLs take precedence over umasks except for filesystems mounted with
+  # option "noacl".
+  umask g-w,o-w
 
-  # make some handy extras
+  printf "${BLUE}Cloning zsh-starterkit...${NORMAL}\n"
+  command -v git >/dev/null 2>&1 || {
+    echo "Error: git is not installed"
+    exit 1
+  }
+  # The Windows (MSYS) Git is not compatible with normal use on cygwin
+  if [ "$OSTYPE" = cygwin ]; then
+    if git --version | grep msysgit > /dev/null; then
+      echo "Error: Windows/MSYS Git is not supported on Cygwin"
+      echo "Error: Make sure the Cygwin git package is installed and is first on the path"
+      exit 1
+    fi
+  fi
+  env git clone --depth=1 https://github.com/mattmc3/zsh-starterkit.git "$ZSH_STARTERKIT" || {
+    printf "Error: git clone of zsh-starterkit repo failed\n"
+    exit 1
+  }
+
+  # install the config templates
+  printf "${BLUE}Copying the zsh-starterkit template configs to ${ZDOTDIR}${NORMAL}\n"
+  cp "$ZSH_STARTERKIT"/templates/.zshenv ~/.zshenv
+  cp "$ZSH_STARTERKIT"/templates/.config/zsh/.zshrc "${ZDOTDIR}"/.zshrc
   touch "${ZDOTDIR}/.zshenv"
-  zsh -c "cd ${ZDOTDIR}; ln -s .zshrc zshrc.zsh"
-  zsh -c "cd ${ZDOTDIR}; ln -s .zshenv zshenv.zsh"
+  zsh -c "cd ${ZDOTDIR}; ln -s .zshrc zshrc.zsh; ln -s .zshenv zshenv.zsh"
 
-# If this user's login shell is not already "zsh", attempt to switch.
+  # If this user's login shell is not already "zsh", attempt to switch.
   TEST_CURRENT_SHELL=$(basename "$SHELL")
   if [ "$TEST_CURRENT_SHELL" != "zsh" ]; then
     # If this platform provides a "chsh" command (not Cygwin), do it, man!
