@@ -68,18 +68,22 @@ You get some of the best plugins:
   suit your needs.
 - `$ZSH_STARTERKIT` : This is where this project will live.
 
-#### Common questions
+### FAQ
 
 _**Q:** How do I change my theme?_
 
 **A:** Have a look in `$ZDOTDIR/.zshrc`. There you will find the theme
 settings.
 
+---
+
 _**Q:** How do I know what themes are available?_
 
 **A:** zsh-starterkit comes with a `omz-themes` function to view a list of
 [oh-my-zsh themes][oh-my-zsh-themes].
 Type `omz-themes` at your prompt.
+
+---
 
 _**Q:** Can I try out a theme to see if I like it??_
 
@@ -88,15 +92,21 @@ to try temporarily. Try the half-life theme by typing this:
 `omz-themes half-life`. If you decide you want to keep a theme, edit your
 `$ZDOTDIR/.zshrc` file.
 
+---
+
 _**Q:** How do I know what plugins are available?_
 
 **A:** zsh-starterkit comes with a `omz-plugins` function to view a list of
 oh-my-zsh plugins. Type `omz-plugins` at your prompt.
 
+---
+
 _**Q:** How do I stop zsh-starterkit from updating itself?_
 
 **A:** Have a look in `$ZDOTDIR/.zshrc`. There you will find settings to
 change this.
+
+---
 
 _**Q:** How can I make my shell load faster?_
 
@@ -104,15 +114,21 @@ _**Q:** How can I make my shell load faster?_
 too many plugins, you may start to see slowdowns. Make sure you only load
 the plugins you need.
 
+---
+
 _**Q:** How can I benchmark my shell load times?_
 
 **A:** zsh-starterkit comes with a `benchmark` function.
+
+---
 
 _**Q:** What if I want to stop using zsh-starterkit or make my own setup?_
 
 **A:** The .zshrc file is yours to edit as you please. Remove the zsh-starterkit
 content from that file and you are free. Also, check out the antigen] project
 to see how the magic happens.
+
+---
 
 _**Q:** Why did you choose [antigen] instead of
 [[insert your favorite plugin manager here]][antibody]?_
