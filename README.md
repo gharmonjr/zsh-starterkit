@@ -23,9 +23,11 @@ sh -c "$(curl -fsSL git.io/zsh-starterkit)"
 ### SHELL CONFIG
 
 zsh-starter kit won't clutter up your home directory - you're welcome! It uses
-`~/.config/zsh` to store its configs. The exception to this is `~/.zshenv` which
-is required to reside in your $HOME, and sets an environment variable to tell
-zsh where to find the rest of its configuration.
+`~/.config/zsh` to store its configs via setting the `$ZDOTDIR` variable.
+
+The lone holdout is `~/.zshenv` which is required to reside in your $HOME, and
+sets the `$ZDOTDIR` environment variable to tell zsh where to find the rest of
+its configuration.
 
 If you have `$XDG_CONFIG_HOME` set to something other than `~/.config`, that
 path is respected.
@@ -61,16 +63,16 @@ You get some of the best plugins:
 
 - `~/.zshenv` : Some shell environment variables are set here, but this file
   should generally be left alone unless you are familiar with zsh.
-- `~/.config/zsh/.zshrc` : This file runs on every start of zsh. zsh-starterkit
+- `$ZDOTDIR/.zshrc` : This file runs on every start of zsh. zsh-starterkit
   gives you a great base configuration, but feel free to make changes here to
   suit your needs.
-- `~/.config/zsh/.zsh-starterkit` : This is where this project will live.
+- `$ZSH_STARTERKIT` : This is where this project will live.
 
 #### Common questions
 
 _Q: How do I change my theme?_
 
-**A: Have a look in `~/.config/zsh/.zshrc`. There you will find the theme
+**A: Have a look in `$ZDOTDIR/.zshrc`. There you will find the theme
 settings**
 
 _Q: How do I know what themes are available?_
@@ -94,7 +96,7 @@ Type `omz-plugins` at your prompt.**
 
 _Q: How do I stop zsh-starterkit from updating itself?_
 
-**A: Have a look in `~/.config/zsh/.zshrc`. There you will find settings to
+**A: Have a look in `$ZDOTDIR/.zshrc`. There you will find settings to
 change this**
 
 _Q: How can I make my shell load faster?_
