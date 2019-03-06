@@ -146,6 +146,15 @@ _**Q:** Why did you choose [antigen] instead of
 **A:** Antigen is a great plugin manager with fantastic oh-my-zsh theme
 integration.
 
+---
+
+_**Q:** Your terminal image shows a dark theme and my terminal is light.
+How can I pick a dark theme?
+
+**A:** The dark/light terminal color isn't due to a theme. That's configured
+in the terminal application itself and not something **zsh-starterkit** can
+change. Try your terminal settings, or try another terminal like [iTerm2][iterm2].
+
 
 [antibody]: http://getantibody.github.io/
 [antigen]: http://antigen.sharats.me/
@@ -160,3 +169,4 @@ integration.
 [pure-theme]: https://github.com/sindresorhus/pure
 [spaceship-prompt]: https://github.com/denysdovhan/spaceship-prompt
 [terminal]: https://raw.githubusercontent.com/mattmc3/zsh-starterkit/master/media/zsh-starterkit.png
+[iterm2]: https://www.iterm2.com/
