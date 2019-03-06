@@ -10,6 +10,16 @@ Better shell living via better zsh defaults - that's zsh-starterkit.
 
 ![Terminal][terminal]
 
+## What is it?
+
+**zsh-starterkit** is a simple, single command ZSH installer to get new users
+up and running fast with a well configured and themed Z shell. It combines
+[oh-my-zsh](https://ohmyz.sh/), [antigen](http://antigen.sharats.me), and the
+fish-like plugins from [zsh-users](https://github.com/zsh-users/) into a
+powerful out-of-the-box default ZSH configuration. While  geared towards quick
+setup and introducing new users to ZSH, it is flexible enough for seasoned ZSH
+users too.
+
 ## Basic Installation
 
 zsh-starterkit can be installed by running this `curl` command.
