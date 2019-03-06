@@ -1,12 +1,12 @@
 # zsh-starterkit
 
 Are you looking for a great shell setup, but don't have hours or days to get
-a great configuration? Do you want to introduce yourself or others to zsh and
+a great configuration? Do you want to introduce yourself or others to ZSH and
 want a starterkit to help make that dirt simple? Do you want something you can
 install now with amazing defaults that will grow with you if you decide to
 customize over time? Then this project is for you.
 
-Better shell living via better zsh defaults - that's zsh-starterkit.
+Better shell living via better ZSH defaults - that's **zsh-starterkit**.
 
 ![Terminal][terminal]
 
