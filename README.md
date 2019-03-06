@@ -178,7 +178,7 @@ change. Try your terminal settings, or try another terminal like
 [antigen]: http://antigen.sharats.me/
 [iterm2]: https://www.iterm2.com/
 [oh-my-zsh-themes]: https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-[oh-my-zsh]: hhttps://ohmyz.sh/
+[oh-my-zsh]: https://ohmyz.sh/
 [pure-theme]: https://github.com/sindresorhus/pure
 [spaceship-prompt]: https://github.com/denysdovhan/spaceship-prompt
 [terminal]: https://raw.githubusercontent.com/mattmc3/zsh-starterkit/master/media/zsh-starterkit.png
