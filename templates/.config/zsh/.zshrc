@@ -43,6 +43,16 @@ ZSH_PLUGINS=(
   # misc
   mafredri/zsh-async
   mattmc3/zsh-history
+
+  # You can install themes beyond what omz offers
+  # Read about them and decide if you want to try one
+  # remember to set OMZ_THEME="" above to empty
+
+  # Pure: https://github.com/sindresorhus/pure
+  #sindresorhus/pure
+
+  # Spaceship: https://github.com/denysdovhan/spaceship-prompt
+  #denysdovhan/spaceship-prompt
 )
 
 # load the starter kit

@@ -64,9 +64,13 @@ function chpwd() {
   fi
 }
 
-# list the zsh themes available
+# list the zsh themes available, or set a theme
 function omz-themes() {
-  find "$ADOTDIR"/bundles/robbyrussell/oh-my-zsh/themes -type f -name '*.zsh-theme' -exec basename {} .zsh-theme \; | sort -f | column
+  if [ -z "$1" ]; then
+    find "$ADOTDIR"/bundles/robbyrussell/oh-my-zsh/themes -type f -name '*.zsh-theme' -exec basename {} .zsh-theme \; | sort -f | column
+  else
+    antigen theme "$1" || antigen theme "$OMZ_THEME"
+  fi
 }
 
 # list the zsh plugins available
@@ -77,6 +81,11 @@ function omz-plugins() {
 # update all the plugins that antigen manages
 function zsh-update() {
   env zsh -f "$ZSH_STARTERKIT"/tools/upgrade.sh
+}
+
+# benchmark
+function benchmark() {
+  for i in $(seq 1 10); do /usr/bin/time /bin/zsh -i -c exit; done;
 }
 
 # Check for updates on initial load...
