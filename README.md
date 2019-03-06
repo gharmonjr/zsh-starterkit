@@ -149,7 +149,7 @@ integration.
 ---
 
 _**Q:** Your terminal image shows a dark theme and my terminal is light.
-How can I pick a dark theme?
+How can I pick a dark theme?_
 
 **A:** The dark/light terminal color isn't due to a theme. That's configured
 in the terminal application itself and not something **zsh-starterkit** can
