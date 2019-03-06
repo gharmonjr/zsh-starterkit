@@ -8,6 +8,8 @@ customize over time? Then this project is for you.
 
 Better shell living via better zsh defaults - that's zsh-starterkit.
 
+![Terminal][terminal]
+
 ## Basic Installation
 
 zsh-starterkit can be installed by running this `curl` command.
@@ -58,18 +60,37 @@ You get some of the best plugins:
 #### Files
 
 - `~/.zshenv` : Some shell environment variables are set here, but this file
-  should be left alone until you get more familiar with zsh.
+  should generally be left alone unless you are familiar with zsh.
 - `~/.config/zsh/.zshrc` : This file runs on every start of zsh. zsh-starterkit
   gives you a great base configuration, but feel free to make changes here to
   suit your needs.
-- `~/.config/zsh/zsh-starterkit` : This is where this project will live.
+- `~/.config/zsh/.zsh-starterkit` : This is where this project will live.
 
-#### Q&A
+#### Common questions
 
 _Q: How do I change my theme?_
 
 **A: Have a look in `~/.config/zsh/.zshrc`. There you will find the theme
 settings**
+
+_Q: How do I know what themes are available?_
+
+**A: zsh-starterkit comes with a `omz-themes` function to view a list of
+[oh-my-zsh themes][oh-my-zsh-themes].
+Type `omz-themes` at your prompt.**
+
+_Q: Can I try out a theme to see if I like it??_
+
+**A: Sure! Use the `omz-themes` function and provide it with the name of a theme
+to try temporarily. Try the half-life theme by typing this:
+`omz-themes half-life`. If you decide you want to keep a theme, edit your
+`$ZDOTDIR/.zshrc` file.**
+
+_Q: How do I know what plugins are available?_
+
+**A: zsh-starterkit comes with a `omz-plugins` function to view a list of
+oh-my-zsh plugins.
+Type `omz-plugins` at your prompt.**
 
 _Q: How do I stop zsh-starterkit from updating itself?_
 
@@ -82,6 +103,22 @@ _Q: How can I make my shell load faster?_
 too many plugins, you may start to see slowdowns. Make sure you only load
 the plugins you need.**
 
+_Q: How can I benchmark my shell load times?_
+
+**A: zsh-starterkit comes with a `benchmark` function.**
+
+_Q: What if I want to stop using zsh-starterkit or make my own setup?_
+
+**A: The .zshrc file is yours to edit as you please. Remove the zsh-starterkit
+content from that file and you are free. Also, check out the antigen] project
+to see how the magic happens.**
+
+_Q: Why did you choose [antigen] instead of
+[[insert other plugin manager here]][antibody]?_
+
+**A: Antigen is a great starter plugin manager with fantastic oh-my-zsh
+integration.**
+
 
 [antibody]: http://getantibody.github.io/
 [antigen]: http://antigen.sharats.me/
@@ -93,5 +130,6 @@ the plugins you need.**
 [zsh-history-substring-search]: https://github.com/zsh-users/zsh-history-substring-search
 [zsh-starterkit]: https://github.com/mattmc3/zsh-starterkit
 [zsh-syntax-highlighting]: https://github.com/zsh-users/zsh-syntax-highlighting
-[pure-theme]: [https://github.com/sindresorhus/pure]
-[spaceship-prompt]: [https://github.com/denysdovhan/spaceship-prompt]
+[pure-theme]: https://github.com/sindresorhus/pure
+[spaceship-prompt]: https://github.com/denysdovhan/spaceship-prompt
+[terminal]: https://raw.githubusercontent.com/mattmc3/zsh-starterkit/master/media/zsh-starterkit.png
