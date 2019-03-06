@@ -72,6 +72,10 @@ In a nutshell, this is what this project does to a system to get Z shell setup:
 - Attempts to change your default shell to ZSH
 - Installs a set of default plugins including [oh-my-zsh] and goodies from
   [zsh-users]
+- Installs this project (not a plugin!) in `$ZDOTDIR/.zsh-starterkit` and
+  sources `zsh-starterkit.zsh` from `.zshrc`.
+- All the magic is in `zsh-starterkit.zsh`. This is a thin, micro-framework
+  that serves as mostly an [antigen] wraper.
 
 Some other notables:
 
@@ -83,6 +87,8 @@ Some other notables:
 - **zsh-starterkit** respects the XDG spec and won't clutter up your home
   directory - you're welcome! If you have `$XDG_CONFIG_HOME` set to something
   other than `~/.config`, that path is respected.
+- **zsh-starterkit** is a framework. It is **NOT** a plugin. Do not add
+  mattmc3/zsh-starterkit to your $ZSH_PLUGINS. Bad things could happen.
 
 ### CUSTOMIZATION
 
