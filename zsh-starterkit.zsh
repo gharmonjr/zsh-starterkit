@@ -9,7 +9,7 @@ export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
 export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
 
 # these should already be set
-export ZDOTDIR="${ZDOTDIR:-$HOME/.config/zsh}"
+export ZDOTDIR="${ZDOTDIR:-$HOME}"
 export ZSH_STARTERKIT="${ZSH_STARTERKIT:-$ZDOTDIR/.zsh-starterkit}"
 
 # set reasonable defaults
